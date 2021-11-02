@@ -77,14 +77,23 @@ namespace PencilRunner
             if (other.CompareTag("Gainer"))
             {
                 Destroy(other.gameObject);
+
                 gameObject.transform.localScale = new Vector3(0.3f, increaseSize+=1f, 0.2f);
+                //gameObject.transform.localScale.y += increaseSize;
             }
             if (other.CompareTag("Reducer"))
             {
                 if (increaseSize != 1f)
                     gameObject.transform.localScale = new Vector3(0.2f, increaseSize-=1f, 0.2f);
+                Debug.Log(other.name);
                     //float temp = transform.localScale.y;
                 //gameObject.transform.localScale = new Vector3(0.2f, gameObject.transform.localScale.y-=1f, 0.2f);
+            }
+            if (other.CompareTag("Gems"))
+            {
+                Destroy(other.gameObject);
+                Debug.Log(other.name);
+                UIManager.Instance.IncreaseScore(1);
             }
         }
     }
