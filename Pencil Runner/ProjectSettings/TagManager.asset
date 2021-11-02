@@ -7,6 +7,7 @@ TagManager:
   - Gainer
   - Reducer
   - Gems
+  - Endline
   layers:
   - Default
   - TransparentFX

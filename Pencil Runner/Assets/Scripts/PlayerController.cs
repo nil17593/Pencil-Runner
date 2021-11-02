@@ -16,6 +16,7 @@ namespace PencilRunner
         [SerializeField] private float forwardMovSpeed;
         [SerializeField] private float horizontalMovSpeed;
         [SerializeField] private float increaseSize;
+        [SerializeField] private int score;
         //[SerializeField] private float decreasSize;
         //[SerializeField] private float fixedSize;
         #endregion
@@ -33,6 +34,7 @@ namespace PencilRunner
             ForwardMovement();
             HorizontalMovement();
             //ReduceSize();
+            Die();
         }
 
         private void ForwardMovement()
@@ -43,26 +45,26 @@ namespace PencilRunner
 
         private void HorizontalMovement()
         {
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D) || SwipeManager.swipeRight)
             {
                 horizontalMov = horizontalMovSpeed * Time.fixedDeltaTime * transform.right;
                 playerRigidbody.MovePosition(playerRigidbody.position + horizontalMov);
-                //laneNumber++;
-                //if (laneNumber == 3)
-                //{
-                //    laneNumber = 2;
-                //}
+                laneNumber++;
+                if (laneNumber == 3)
+                {
+                    laneNumber = 2;
+                }
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A) || SwipeManager.swipeLeft)
             {
                 horizontalMov = horizontalMovSpeed * Time.fixedDeltaTime * -transform.right;
                 playerRigidbody.MovePosition(playerRigidbody.position + horizontalMov);
-                //laneNumber--;
-                //if (laneNumber == -1)
-                //{
-                //    laneNumber = 0;
-                //}
+                laneNumber--;
+                if (laneNumber == -1)
+                {
+                    laneNumber = 0;
+                }
             }
         }
 
@@ -93,7 +95,21 @@ namespace PencilRunner
             {
                 Destroy(other.gameObject);
                 Debug.Log(other.name);
-                UIManager.Instance.IncreaseScore(1);
+                UIManager.Instance.IncreaseScore(score);
+            }
+            if (other.CompareTag("Endline"))
+            {
+                //CameraController.CameraInstance.CameraPosiAfterLevelComplete();
+                //if(UIManager.Instance)
+            }
+        }
+
+        private void Die()
+        {
+            if (this.transform.position.y < -3)
+            {
+                gameObject.SetActive(false);
+                UIManager.Instance.LoadGameoverPanel();
             }
         }
     }
