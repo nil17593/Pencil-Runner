@@ -10,6 +10,7 @@ namespace PencilRunner
         private Rigidbody playerRigidbody;
         private Vector3 forwardMov;
         private Vector3 horizontalMov;
+        private PlayerController playerController;
         #endregion
 
         #region Serialized Fields
@@ -23,9 +24,10 @@ namespace PencilRunner
 
         #region Private Integers
         private int laneNumber;
+        private bool shouldMove = true;
         #endregion
 
-        private void Awake()
+        private void Start()
         {
             playerRigidbody = GetComponent<Rigidbody>();
         }
@@ -39,13 +41,16 @@ namespace PencilRunner
 
         private void ForwardMovement()
         {
-            forwardMov= forwardMovSpeed * Time.fixedDeltaTime * transform.forward;
-            playerRigidbody.MovePosition(playerRigidbody.position + forwardMov);
+            if (shouldMove)
+            {
+                forwardMov = forwardMovSpeed * Time.fixedDeltaTime * transform.forward;
+                playerRigidbody.MovePosition(playerRigidbody.position + forwardMov);
+            }
         }
 
         private void HorizontalMovement()
         {
-            if (Input.GetKey(KeyCode.D) || SwipeManager.swipeRight)
+            if (Input.GetKey(KeyCode.D) || SwipeManager.swipeRight && shouldMove)
             {
                 horizontalMov = horizontalMovSpeed * Time.fixedDeltaTime * transform.right;
                 playerRigidbody.MovePosition(playerRigidbody.position + horizontalMov);
@@ -56,7 +61,7 @@ namespace PencilRunner
                 }
             }
 
-            if (Input.GetKey(KeyCode.A) || SwipeManager.swipeLeft)
+            if (Input.GetKey(KeyCode.A) || SwipeManager.swipeLeft && shouldMove)
             {
                 horizontalMov = horizontalMovSpeed * Time.fixedDeltaTime * -transform.right;
                 playerRigidbody.MovePosition(playerRigidbody.position + horizontalMov);
@@ -101,7 +106,34 @@ namespace PencilRunner
             {
                 //CameraController.CameraInstance.CameraPosiAfterLevelComplete();
                 //if(UIManager.Instance)
+                //shouldMove=false;
+                //playerController.enabled = false;
+                //GetComponent<Rigidbody>().isKinematic = true;
+                //playerRigidbody.freezeRotation = true;
+                //playerRigidbody.isKinematic = true;
+                //playerRigidbody.velocity = Vector3.zero;
+                //playerRigidbody.angularVelocity = Vector3.zero;
+                //playerController.enabled = false;
+                //Debug.Log(other.name);
+                //Debug.Log("Collided with endline");
+                //Debug.Log("ShoulMove= "+shouldMove);
+                UIManager.Instance.LoadLevelWinPanel();
+                CameraController.CameraInstance.CameraPosiAfterLevelComplete();
+                StartCoroutine(AfterCompleteLevel());
             }
+        }
+
+
+        IEnumerator AfterCompleteLevel()
+        {
+            forwardMovSpeed = 0;
+            shouldMove = false;
+            //playerRigidbody.MovePosition(playerRigidbody.position + Vector3.zero);
+            yield return new WaitForSeconds(10f);//assuming it takes 10 seconds to play the animation.
+            //playerRigidbody.MovePosition(playerRigidbody.position+forwardMov);
+            shouldMove = true;
+            forwardMov = forwardMovSpeed * Time.fixedDeltaTime * transform.forward;
+            playerRigidbody.MovePosition(playerRigidbody.position + forwardMov);
         }
 
         private void Die()

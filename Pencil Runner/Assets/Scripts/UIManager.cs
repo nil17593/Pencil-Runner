@@ -17,6 +17,9 @@ namespace PencilRunner
         [SerializeField] private Button quitButton;
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private string menuScene;
+        [SerializeField] private GameObject levelWinPanel;
+        [SerializeField] private Button nextLevelBtn;
+        [SerializeField] private Button levelWinMenuBtn;
 
         [Header("GameOver Panel")]
         [SerializeField] private GameObject gameoverPanel;
@@ -51,6 +54,7 @@ namespace PencilRunner
             menuButton.onClick.AddListener(LoadMenu);
             restartButton.onClick.AddListener(RestartGame);
             menuBtn.onClick.AddListener(LoadMenu);
+            levelWinMenuBtn.onClick.AddListener(LoadMenu);
         }
 
         public void IncreaseScore(int increament)
@@ -104,6 +108,11 @@ namespace PencilRunner
         public void LoadGameoverPanel()
         {
             gameoverPanel.SetActive(true);
+        }
+
+        public void LoadLevelWinPanel()
+        {
+            levelWinPanel.SetActive(true);
         }
 
         private void RestartGame()
